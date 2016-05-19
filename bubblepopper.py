@@ -49,7 +49,7 @@ def main(screen):
 
     global rock
     rock = str(generate_rock())
-    key = ""    #this gets evaluated for space or esc
+    key = ""    #this gets evaluated for enter or esc or backspace
 
     while key != 27:    #the followings run in a loop until esc (27) is pressed
         def main_graphics():
@@ -75,15 +75,16 @@ def main(screen):
 
         if keystroke in [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]:    #sense numbers entered for solution
             solution = solution + str(keystroke - 48)
+            screen.addstr()
 
-        if keystroke in [10, 27]:    #sense space or esc
+        if keystroke in [10, 27, 127]:    #sense enter or esc or backspace
             key = keystroke
 
         if rock_y == int(curses.LINES - 1):     #generate new rock if reached bottom
             rock = str(generate_rock())
             rock_y = 1
 
-        if key == 10:               #what happens if enter (32) is pressed
+        if key == 10:               #what happens if enter (10) is pressed
             if int(solution) == result:
                 #here comes what happens if you entered the correct solution
                 for _ in range(3):
@@ -93,6 +94,10 @@ def main(screen):
                 time.sleep(0.2)
                 rock = str(generate_rock())
             solution = ""
+
+        if key == 127:    #backspace deletes whatever's enetered as solution
+            solution = ""
+            screen.refresh()
 
         if key == 27: break         #quit if esc (27) is pressed
 
