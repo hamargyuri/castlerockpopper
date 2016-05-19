@@ -3,6 +3,7 @@
 import curses
 import time
 import random
+
 result = ""
 solution = ""
 rock_x = ""
@@ -60,18 +61,39 @@ def main(screen):
         if keystroke in [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]:    #sense numbers of solutions
             solution = solution + str(keystroke - 48)
 
-        if keystroke in [32, 27]:    #sense space or esc
-            key = keystroke
+        if keystroke in [263, 10, 27]:    #sense space or esc  ohh JewRy pls ... 10 is the ascii code for enter
+            key = keystroke               #263 is the ascii code for backspace - enables to erase solution line
 
         if rock_y == int(curses.LINES - 1):     #new rock if reached bottom
             rock = str(generate_rock())
             rock_y = 1
 
-        if key == 32:               #space is pressed (how to change to enter?)
-            if int(solution) == result:
-                #here comes what happens if you enter the right solution
-                rock = str(generate_rock())
-                rock_y = 1
+        if key == 10:               #space is pressed (how to change to enter?--> change it to 10)
+            if solution is not '':
+                if int(solution) == result:
+                    #here comes what happens if you enter the right solution
+                    bravo = "Grat"
+                    screen.addstr(curses.LINES // 2, curses.COLS // 2 - len(bravo), bravo)
+                    screen.refresh()
+                    time.sleep(2)
+                    rock = str(generate_rock())
+                    rock_y = 1
+                else:
+                    wrong_result = "Wrong solution"
+                    screen.addstr(curses.LINES // 2, curses.COLS // 2 - len(wrong_result), wrong_result)
+                    screen.refresh()
+                    time.sleep(2)
+                    #life--
+            else:
+                warning = "Type in a solution"
+                screen.addstr(curses.LINES // 2, curses.COLS // 2 - len(warning), warning)
+                screen.refresh()
+                time.sleep(2)
+
+        if key == 263:
+            solution = ""
+            screen.addstr(curses.LINES - 1, 5, "Solution: " + str(solution))
+            screen.refresh()
 
         if key == 27: break         #quit if esc is pressed
 
