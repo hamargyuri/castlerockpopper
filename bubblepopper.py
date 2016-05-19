@@ -84,15 +84,16 @@ def main(screen):
             rock_y = 1
 
         if key == 10:               #what happens if enter (10) is pressed
-            if int(solution) == result:
+            if len(solution) > 0:   #so it won't crash when "solution" is empty
+                if int(solution) == result:
                 #here comes what happens if you entered the correct solution
-                for _ in range(3):
-                    blast()
-                screen.clear()
-                main_graphics()
-                time.sleep(0.2)
-                rock = str(generate_rock())
-            solution = ""
+                    for _ in range(3):
+                        blast()
+                    screen.clear()
+                    main_graphics()
+                    time.sleep(0.2)
+                    rock = str(generate_rock())
+                solution = ""
 
         if key == 127:    #backspace deletes whatever's enetered as solution
             solution = ""
