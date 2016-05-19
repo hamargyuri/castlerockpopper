@@ -5,7 +5,7 @@ import time
 import random
 from curses import KEY_ENTER
 
-def main(scr):
+def main(screen):
     curses.noecho()
     curses.curs_set(0)
 
