@@ -76,14 +76,14 @@ def main(screen):
         if keystroke in [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]:    #sense numbers entered for solution
             solution = solution + str(keystroke - 48)
 
-        if keystroke in [32, 27]:    #sense space or esc
+        if keystroke in [10, 27]:    #sense space or esc
             key = keystroke
 
         if rock_y == int(curses.LINES - 1):     #generate new rock if reached bottom
             rock = str(generate_rock())
             rock_y = 1
 
-        if key == 32:               #what happens if space (32) is pressed (enter (13) does not work)
+        if key == 10:               #what happens if enter (32) is pressed
             if int(solution) == result:
                 #here comes what happens if you entered the correct solution
                 for _ in range(3):
