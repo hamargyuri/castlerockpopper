@@ -51,11 +51,12 @@ def main(screen):
     rock = str(generate_rock())
     key = ""    #this gets evaluated for enter or esc or backspace
 
+    def main_graphics():
+        screen.border(0)
+        screen.addstr(0, curses.COLS // 2 - 9, "Castle Rock Popper")
+        screen.addstr(curses.LINES - 1, 5, "Solution: " + str(solution))
+
     while key != 27:    #the followings run in a loop until esc (27) is pressed
-        def main_graphics():
-            screen.border(0)
-            screen.addstr(0, curses.COLS // 2 - 9, "Castle Rock Popper")
-            screen.addstr(curses.LINES - 1, 5, "Solution: " + str(solution))
         #initial settings
         global solution
         global rock_x
@@ -82,7 +83,7 @@ def main(screen):
         if rock_y == int(curses.LINES - 1):     #generate new rock if reached bottom
             rock = str(generate_rock())
             rock_y = 1
-            
+
         if key == 10:               #what happens if enter (10) is pressed
             if len(solution) > 0:   #so it won't crash when "solution" is empty
                 if int(solution) == result:
