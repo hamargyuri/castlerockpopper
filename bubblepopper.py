@@ -9,11 +9,11 @@ rock_x = ""
 rock = ""
 
 def main(screen):
-    curses.noecho()
-    curses.curs_set(0)
+    curses.noecho()             # read keystrokes instantly, without waiting for enter to ne pressed
+    curses.curs_set(0)          # set cursor visibility to invisible
 
     screen = curses.newwin(curses.LINES, curses.COLS, 0, 0)
-    screen.keypad(1)
+    screen.keypad(1)            # enable processing of functional keys by curses
     screen.nodelay(1)
 
     def generate_rock():    #function for generating rocks
