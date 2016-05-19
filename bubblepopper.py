@@ -75,7 +75,6 @@ def main(screen):
 
         if keystroke in [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]:    #sense numbers entered for solution
             solution = solution + str(keystroke - 48)
-            screen.addstr()
 
         if keystroke in [10, 27, 127]:    #sense enter or esc or backspace
             key = keystroke
@@ -97,7 +96,6 @@ def main(screen):
 
         if key == 127:    #backspace deletes whatever's enetered as solution
             solution = ""
-            screen.refresh()
 
         if key == 27: break         #quit if esc (27) is pressed
 
