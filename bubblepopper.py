@@ -42,7 +42,7 @@ def main(screen):
         screen.border(0)
         screen.addstr(0, curses.COLS // 2 - 9, "Castle Rock Popper")
         screen.addstr(rock_y, curses.COLS // 2, rock)
-        screen.addstr(22, 5, str(solution))
+        screen.addstr(22, 5, str(solution))  #display solution of player
         screen.addstr(0, 0, str(result))    #just testing if result is working
         screen.addstr(rock_y, curses.COLS // 2 - len(rock) // 2, rock)
         screen.refresh()
