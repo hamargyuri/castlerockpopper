@@ -9,6 +9,8 @@ solution = ""    #solution entered by the player
 rock_x = ""    #x coordinate of rocks
 rock = ""    #the appearing rock of equation
 rock_y = ""    #y coordinate of rocks
+lives = 5       # number of lives
+score = 0    # number of good solutions
 
 def main(screen):
     curses.curs_set(0)          # set cursor visibility to invisible
@@ -20,7 +22,7 @@ def main(screen):
         global solution
         global rock_x
         global rock_y
-        rock_x = random.randint(1, curses.COLS - 4)
+        rock_x = random.randint(1, curses.COLS - 22)
         rock_y = 1
         num_1 = int(random.randint(0, 9))
         num_2 = int(random.randint(1, 9))
@@ -55,12 +57,23 @@ def main(screen):
         screen.border(0)
         screen.addstr(0, curses.COLS // 2 - 9, "Castle Rock Popper")
         screen.addstr(curses.LINES - 1, 5, "Solution: " + str(solution))
+        lives_count()
+        player_score()
 
+    def lives_count():
+        screen.addstr(2, curses.COLS - 20, "♥ " * lives)
+
+    def player_score():
+        global score
+        screen.addstr(5, curses.COLS - 20, "Your score: " + str(score))
+        score = int(score)
+        
     while key != 27:    #the followings run in a loop until esc (27) is pressed
         #initial settings
         global solution
         global rock_x
         global rock_y
+        global lives
         key = ""
         screen.clear()    #clear screen before generating next position of rock
         main_graphics()
@@ -83,6 +96,9 @@ def main(screen):
         if rock_y == int(curses.LINES - 1):     #generate new rock if reached bottom
             rock = str(generate_rock())
             rock_y = 1
+            lives = lives -1
+            screen.clear()
+            main_graphics()
 
         if key == 10:               #what happens if enter (10) is pressed
             if len(solution) > 0:   #so it won't crash when "solution" is empty
@@ -90,16 +106,25 @@ def main(screen):
                 #here comes what happens if you entered the correct solution
                     for _ in range(3):
                         blast()
+                    global score
+                    score = score + 1
                     screen.clear()
                     main_graphics()
                     time.sleep(0.2)
                     rock = str(generate_rock())
+                else:
+                    lives = lives - 1
+                    screen.clear()
+                    main_graphics()
                 solution = ""
+
+        if lives == 0:
+            break
 
         if key == 127:    #backspace deletes whatever's enetered as solution
             solution = ""
 
-        if key == 27: break         #quit if esc (27) is pressed
-
+        if key == 27:
+            break         #quit if esc (27) is pressed
 
 curses.wrapper(main)
