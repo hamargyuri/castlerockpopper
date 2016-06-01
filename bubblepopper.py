@@ -19,6 +19,8 @@ def main(screen):
     curses.curs_set(0)          # set cursor visibility to invisible
     screen = curses.newwin(curses.LINES, curses.COLS, 0, 0)
     screen.nodelay(1)
+    curses.start_color()
+    curses.use_default_colors()
 
     def generate_rock():  # function for generating rocks of equations
         global result
@@ -57,13 +59,14 @@ def main(screen):
     def main_graphics():
         screen.border(0)
         title = "Equation Popper beta"
-        screen.addstr(0, (curses.COLS - len(title)) // 2, title)
+        curses.init_pair(1, curses.COLOR_RED, -1)
+        screen.addstr(0, (curses.COLS - len(title)) // 2, title, curses.color_pair(1))
         screen.addstr(curses.LINES - 1, 5, "Solution: " + str(solution))
         lives_count()
         player_score()
 
     def lives_count():
-        screen.addstr(2, curses.COLS - 20, "♥ " * lives)
+        screen.addstr(2, curses.COLS - 20, "♥ " * lives, curses.color_pair(1))
 
     def player_score():
         global score
