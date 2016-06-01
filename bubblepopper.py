@@ -16,9 +16,9 @@ score = 0    # number of good solutions
 
 
 def main(screen):
-    curses.curs_set(0)          # set cursor visibility to invisible
     screen = curses.newwin(curses.LINES, curses.COLS, 0, 0)
     screen.nodelay(1)
+    curses.curs_set(0)
     curses.start_color()
     curses.use_default_colors()
 
@@ -27,7 +27,7 @@ def main(screen):
         global solution
         global rock_x
         global rock_y
-        rock_x = random.randint(1, curses.COLS - 22)
+        rock_x = random.randint(1, curses.COLS - 24)
         rock_y = 1
         num_1 = int(random.randint(0, 9))
         num_2 = int(random.randint(1, 9))
@@ -141,12 +141,12 @@ def main(screen):
     def welcome_screen():
         screen.clear()
         keystroke = ""
+        with open('welcome.txt', 'r') as welcome:
+            welcome_msg = welcome.readlines()
+            for i, j in enumerate(welcome_msg):
+                screen.addstr(1 + i, (curses.COLS - len(j)) // 2, j)
+        screen.refresh()
         while keystroke != 10:
-            with open('welcome.txt', 'r') as welcome:
-                welcome_msg = welcome.readlines()
-                for i, j in enumerate(welcome_msg):
-                    screen.addstr(5 + i, (curses.COLS - len(j)) // 2, j)
-            screen.refresh()
             keystroke = screen.getch()
             if keystroke == 27:
                 exit()
@@ -155,14 +155,14 @@ def main(screen):
     def game_over(score):
         screen.clear()
         keystroke = ""
+        with open('game_over.txt', 'r') as gameover:
+            game_over_msg = gameover.readlines()
+            final_score = "Your score is: %d" % (score)
+            for i, j in enumerate(game_over_msg):
+                screen.addstr(curses.LINES // 2 - 4 + i, (curses.COLS - len(j)) // 2, j)
+        screen.addstr(curses.LINES // 2, (curses.COLS - len(final_score)) // 2, final_score)
+        screen.refresh()
         while keystroke != 10:
-            with open('game_over.txt', 'r') as gameover:
-                game_over_msg = gameover.readlines()
-                final_score = "Your score is: %d" % (score)
-                for i, j in enumerate(game_over_msg):
-                    screen.addstr(curses.LINES // 2 - 4 + i, (curses.COLS - len(j)) // 2, j)
-            screen.addstr(curses.LINES // 2, (curses.COLS - len(final_score)) // 2, final_score)
-            screen.refresh()
             keystroke = screen.getch()
             if keystroke == 27:
                 exit()
