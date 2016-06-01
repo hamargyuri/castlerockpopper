@@ -105,7 +105,7 @@ def main(screen):
             if keystroke in [10, 27, 127]:  # sense enter or esc or backspace
                 key = keystroke
 
-            if rock_y == int(curses.LINES - 1):  # generate new rock if reached bottom
+            if rock_y == int(curses.LINES - 3):  # generate new rock if reached bottom
                 rock = generate_rock()
                 rock_y = 1
                 lives = lives - 1
@@ -158,9 +158,9 @@ def main(screen):
         while keystroke != 10:
             with open('game_over.txt', 'r') as gameover:
                 game_over_msg = gameover.readlines()
+                final_score = "Your score is: %d" % (score)
                 for i, j in enumerate(game_over_msg):
-                    screen.addstr(5 + i, (curses.COLS - len(j)) // 2, j)
-            final_score = "Your score is: %d" % (score)
+                    screen.addstr(curses.LINES // 2 - 4 + i, (curses.COLS - len(j)) // 2, j)
             screen.addstr(curses.LINES // 2, (curses.COLS - len(final_score)) // 2, final_score)
             screen.refresh()
             keystroke = screen.getch()
