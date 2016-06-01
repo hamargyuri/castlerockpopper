@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import curses
 import time
 import random
+import sys
 
 result = ""  # result of the equation stored here
 solution = ""  # solution entered by the player
@@ -52,10 +54,6 @@ def main(screen):
         screen.refresh()
         time.sleep(0.1)
 
-    global rock
-    rock = str(generate_rock())
-    key = ""  # this gets evaluated for enter or esc or backspace
-
     def main_graphics():
         screen.border(0)
         curses.init_pair(1, curses.COLOR_RED, -1)
@@ -72,63 +70,100 @@ def main(screen):
         screen.addstr(5, curses.COLS - 20, "Your score: " + str(score))
         score = int(score)
 
-    while key != 27:  # the followings run in a loop until esc (27) is pressed
-        # initial settings
-        global solution
-        global rock_x
-        global rock_y
-        global lives
+    def game():
         key = ""
-        screen.clear()  # clear screen before generating next position of rock
-        main_graphics()
-        # rock spawn and movement
-        screen.addstr(rock_y, rock_x, rock)
-        screen.refresh()
-        time.sleep(0.3)
-        rock_y = rock_y + 1
-        # reactions to specified keystrokes (in ASCII)
-        keystroke = screen.getch()
-        if keystroke == 45:  # sense "-" entered for negative numbers
-            solution = solution + "-"
-
-        if keystroke in [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]:  # sense numbers entered for solution
-            solution = solution + str(keystroke - 48)
-
-        if keystroke in [10, 27, 127]:  # sense enter or esc or backspace
-            key = keystroke
-
-        if rock_y == int(curses.LINES - 1):  # generate new rock if reached bottom
-            rock = str(generate_rock())
-            rock_y = 1
-            lives = lives - 1
-            screen.clear()
+        rock = str(generate_rock())
+        global score
+        score = 0
+        global lives
+        lives = 5
+        while key != 27:  # the followings run in a loop until esc (27) is pressed
+            # initial settings
+            global solution
+            global rock_x
+            global rock_y
+            key = ""
+            screen.clear()  # clear screen before generating next position of rock
             main_graphics()
+            # rock spawn and movement
+            screen.addstr(rock_y, rock_x, rock)
+            screen.refresh()
+            time.sleep(0.3)
+            rock_y = rock_y + 1
+            # reactions to specified keystrokes (in ASCII)
+            keystroke = screen.getch()
+            if keystroke == 45:  # sense "-" entered for negative numbers
+                solution = solution + "-"
 
-        if key == 10:  # what happens if enter (10) is pressed
-            if len(solution) > 0:  # so it won't crash when "solution" is empty
-                if int(solution) == result:
-                    # here comes what happens if you entered the correct solution
-                    for _ in range(3):
-                        blast()
-                    global score
-                    score = score + 1
-                    screen.clear()
-                    main_graphics()
-                    time.sleep(0.2)
-                    rock = str(generate_rock())
-                else:
-                    lives = lives - 1
-                    screen.clear()
-                    main_graphics()
+            if keystroke in [48, 49, 50, 51, 52, 53, 54, 55, 56, 57]:  # sense numbers entered for solution
+                solution = solution + str(keystroke - 48)
+
+            if keystroke in [10, 27, 127]:  # sense enter or esc or backspace
+                key = keystroke
+
+            if rock_y == int(curses.LINES - 1):  # generate new rock if reached bottom
+                rock = str(generate_rock())
+                rock_y = 1
+                lives = lives - 1
+                screen.clear()
+                main_graphics()
+
+            if key == 10:  # what happens if enter (10) is pressed
+                if len(solution) > 0:  # so it won't crash when "solution" is empty
+                    if int(solution) == result:
+                        # here comes what happens if you entered the correct solution
+                        for _ in range(3):
+                            blast()
+                        score += 1
+                        screen.clear()
+                        main_graphics()
+                        time.sleep(0.2)
+                        rock = str(generate_rock())
+                    else:
+                        lives -= 1
+                        screen.clear()
+                        main_graphics()
+                    solution = ""
+
+            if lives == 0:
+                game_over(score)
+
+            if key == 127:  # backspace deletes whatever's enetered as solution
                 solution = ""
 
-        if lives == 0:
-            break
+            if key == 27:
+                exit()  # quit if esc (27) is pressed
 
-        if key == 127:  # backspace deletes whatever's enetered as solution
-            solution = ""
+    def welcome_screen():
+        screen.clear()
+        keystroke = ""
+        while keystroke != 10:
+            with open('welcome.txt', 'r') as welcome:
+                welcome_msg = welcome.readlines()
+                for i, j in enumerate(welcome_msg):
+                    screen.addstr(5 + i, (curses.COLS - len(j)) // 2, j)
+            screen.refresh()
+            keystroke = screen.getch()
+            if keystroke == 27:
+                exit()
+        game()
 
-        if key == 27:
-            break  # quit if esc (27) is pressed
+    def game_over(score):
+        screen.clear()
+        keystroke = ""
+        while keystroke != 10:
+            with open('game_over.txt', 'r') as gameover:
+                game_over_msg = gameover.readlines()
+                for i, j in enumerate(game_over_msg):
+                    screen.addstr(5 + i, (curses.COLS - len(j)) // 2, j)
+            final_score = "Your score is: %s" % (score)
+            screen.addstr(curses.LINES // 2, (curses.COLS - len(final_score)) // 2, final_score)
+            screen.refresh()
+            keystroke = screen.getch()
+            if keystroke == 27:
+                exit()
+        welcome_screen()
+
+    welcome_screen()
 
 curses.wrapper(main)

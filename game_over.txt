@@ -1,0 +1,3 @@
+GAME OVER!
+
+Press 'enter' to restart or 'esc' to quit
