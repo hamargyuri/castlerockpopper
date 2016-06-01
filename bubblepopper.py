@@ -70,12 +70,13 @@ def main(screen):
     def game():
         key = ""
         rock = str(generate_rock())
+        global score
+        score = 0
         global lives
         lives = 5
         while key != 27:  # the followings run in a loop until esc (27) is pressed
             # initial settings
             global solution
-            global score
             global rock_x
             global rock_y
             key = ""
@@ -122,7 +123,7 @@ def main(screen):
                     solution = ""
 
             if lives == 0:
-                break
+                game_over(score)
 
             if key == 127:  # backspace deletes whatever's enetered as solution
                 solution = ""
@@ -131,6 +132,7 @@ def main(screen):
                 exit()  # quit if esc (27) is pressed
 
     def welcome_screen():
+        screen.clear()
         keystroke = ""
         while keystroke != 10:
             with open('welcome.txt', 'r') as welcome:
@@ -142,6 +144,22 @@ def main(screen):
             if keystroke == 27:
                 exit()
         game()
+
+    def game_over(score):
+        screen.clear()
+        keystroke = ""
+        while keystroke != 10:
+            with open('game_over.txt', 'r') as gameover:
+                game_over_msg = gameover.readlines()
+                for i, j in enumerate(game_over_msg):
+                    screen.addstr(5 + i, (curses.COLS - len(j)) // 2, j)
+            final_score = "Your score is: %s" % (score)
+            screen.addstr(curses.LINES // 2, (curses.COLS - len(final_score)) // 2, final_score)
+            screen.refresh()
+            keystroke = screen.getch()
+            if keystroke == 27:
+                exit()
+        welcome_screen()
 
     welcome_screen()
 
