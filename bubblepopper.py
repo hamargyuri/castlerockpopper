@@ -39,22 +39,25 @@ def main(screen):
             result = num_1 * num_2
         if rock_operator == "/":
             result = num_1 // num_2
-        return (str(num_1) + str(rock_operator) + str(num_2))
+        rock = str(num_1) + str(rock_operator) + str(num_2)
+        rock_bordered = ['/⏡⏡⏡\\', "|%s|" % (rock), '\___/']
+        return rock_bordered
 
     def blast():
-        screen.addstr(rock_y - 1, rock_x, "○◌○ ")
+        screen.addstr(rock_y, rock_x + 1, "○◌○")
         screen.refresh()
         time.sleep(0.1)
-        screen.addstr(rock_y - 1, rock_x, "◎○◎ ")
+        screen.addstr(rock_y, rock_x + 1, "◎○◎")
         screen.refresh()
         time.sleep(0.1)
-        screen.addstr(rock_y - 1, rock_x, "◌◎◌ ")
+        screen.addstr(rock_y, rock_x + 1, "◌◎◌")
         screen.refresh()
         time.sleep(0.1)
 
     def main_graphics():
         screen.border(0)
-        screen.addstr(0, curses.COLS // 2 - 9, "Castle Rock Popper")
+        title = "Equation Popper beta"
+        screen.addstr(0, (curses.COLS - len(title)) // 2, title)
         screen.addstr(curses.LINES - 1, 5, "Solution: " + str(solution))
         lives_count()
         player_score()
@@ -69,11 +72,11 @@ def main(screen):
 
     def game():
         key = ""
-        rock = str(generate_rock())
         global score
         score = 0
         global lives
         lives = 5
+        rock = generate_rock()
         while key != 27:  # the followings run in a loop until esc (27) is pressed
             # initial settings
             global solution
@@ -83,10 +86,11 @@ def main(screen):
             screen.clear()  # clear screen before generating next position of rock
             main_graphics()
             # rock spawn and movement
-            screen.addstr(rock_y, rock_x, rock)
+            for i, j in enumerate(rock):
+                screen.addstr(rock_y + i, rock_x, j)
             screen.refresh()
             time.sleep(0.3)
-            rock_y = rock_y + 1
+            rock_y += 1
             # reactions to specified keystrokes (in ASCII)
             keystroke = screen.getch()
             if keystroke == 45:  # sense "-" entered for negative numbers
@@ -99,7 +103,7 @@ def main(screen):
                 key = keystroke
 
             if rock_y == int(curses.LINES - 1):  # generate new rock if reached bottom
-                rock = str(generate_rock())
+                rock = generate_rock()
                 rock_y = 1
                 lives = lives - 1
                 screen.clear()
@@ -115,7 +119,7 @@ def main(screen):
                         screen.clear()
                         main_graphics()
                         time.sleep(0.2)
-                        rock = str(generate_rock())
+                        rock = generate_rock()
                     else:
                         lives -= 1
                         screen.clear()
@@ -153,7 +157,7 @@ def main(screen):
                 game_over_msg = gameover.readlines()
                 for i, j in enumerate(game_over_msg):
                     screen.addstr(5 + i, (curses.COLS - len(j)) // 2, j)
-            final_score = "Your score is: %s" % (score)
+            final_score = "Your score is: %d" % (score)
             screen.addstr(curses.LINES // 2, (curses.COLS - len(final_score)) // 2, final_score)
             screen.refresh()
             keystroke = screen.getch()
