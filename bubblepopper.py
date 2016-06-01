@@ -70,12 +70,15 @@ def main(screen):
     def game():
         key = ""
         rock = str(generate_rock())
+        global lives
+        lives = 5
         while key != 27:  # the followings run in a loop until esc (27) is pressed
             # initial settings
             global solution
+            global score
             global rock_x
             global rock_y
-            global lives
+            key = ""
             screen.clear()  # clear screen before generating next position of rock
             main_graphics()
             # rock spawn and movement
@@ -107,14 +110,13 @@ def main(screen):
                         # here comes what happens if you entered the correct solution
                         for _ in range(3):
                             blast()
-                        global score
-                        score = score + 1
+                        score += 1
                         screen.clear()
                         main_graphics()
                         time.sleep(0.2)
                         rock = str(generate_rock())
                     else:
-                        lives = lives - 1
+                        lives -= 1
                         screen.clear()
                         main_graphics()
                     solution = ""
@@ -132,13 +134,15 @@ def main(screen):
         keystroke = ""
         while keystroke != 10:
             with open('welcome.txt', 'r') as welcome:
-                welcome_msg = welcome.read()
-            screen.addstr(20, 0, welcome_msg)
+                welcome_msg = welcome.readlines()
+                for i, j in enumerate(welcome_msg):
+                    screen.addstr(5 + i, (curses.COLS - len(j)) // 2, j)
             screen.refresh()
             keystroke = screen.getch()
             if keystroke == 27:
                 exit()
         game()
+
     welcome_screen()
 
 curses.wrapper(main)
