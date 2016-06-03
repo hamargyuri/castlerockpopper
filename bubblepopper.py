@@ -5,7 +5,6 @@ import curses
 import time
 import random
 import sys
-from curses import KEY_BACKSPACE
 
 result = ""  # result of the equation stored here
 solution = ""  # solution entered by the player
@@ -51,6 +50,9 @@ def main(screen):
         return rock_bordered
 
     def blast():
+        blast_list_a = ['', '', '']
+        blast_list_b = ['', '', '']
+        blast_list_c = ['', '', '']
         screen.addstr(rock_y, rock_x + 1, "○◌○")
         screen.refresh()
         time.sleep(0.1)
