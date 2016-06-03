@@ -24,6 +24,7 @@ def main(screen):
     curses.use_default_colors()
     curses.init_pair(1, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
     screen.bkgd(' ', curses.color_pair(1))
 
     def generate_rock():  # function for generating rocks of equations
@@ -50,18 +51,26 @@ def main(screen):
         return rock_bordered
 
     def blast():
-        blast_list_a = ['', '', '']
-        blast_list_b = ['', '', '']
-        blast_list_c = ['', '', '']
-        screen.addstr(rock_y, rock_x + 1, "○◌○")
+        blast_list_a = ['✮✮✦✮✮ ', '✮✦✦✦✮ ', '✮✮✦✮✮ ']
+        blast_list_b = ['✮✦✦✦✮ ', '✦✬✸✬✦ ', '✮✦✦✦✮ ']
+        blast_list_c = ['✦✬✸✬✦ ', '✬✸✪✸✬ ', '✦✬✸✬✦ ']
+        blast_list_d = ['✬✸✪✸✬ ', '✮✮✦✮✮ ', '✬✸✪✸✬ ']
+        for i, j in enumerate(blast_list_a):
+            screen.addstr(rock_y + i - 1, rock_x, j, curses.color_pair(3))
         screen.refresh()
-        time.sleep(0.1)
-        screen.addstr(rock_y, rock_x + 1, "◎○◎")
+        time.sleep(0.15)
+        for i, j in enumerate(blast_list_b):
+            screen.addstr(rock_y + i - 1, rock_x, j, curses.color_pair(3))
         screen.refresh()
-        time.sleep(0.1)
-        screen.addstr(rock_y, rock_x + 1, "◌◎◌")
+        time.sleep(0.15)
+        for i, j in enumerate(blast_list_c):
+            screen.addstr(rock_y + i - 1, rock_x, j, curses.color_pair(3))
         screen.refresh()
-        time.sleep(0.1)
+        time.sleep(0.15)
+        for i, j in enumerate(blast_list_d):
+            screen.addstr(rock_y + i - 1, rock_x, j, curses.color_pair(3))
+        screen.refresh()
+        time.sleep(0.15)
 
     def main_graphics():
         screen.border(0)
